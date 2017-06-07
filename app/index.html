@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <title>MowPi6 Tom</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container-fluid">
+   <div class="row">
+      <div class="jumbotron">
+         <h1>MowPi6 Tom</h1>
+         <p>Mowing fun</p>
+      </div>
+   </div>
+   <div class="row">
+      <div class="bd box" id="stop">
+         <i class="fa stop">STOP</i>
+      </div>
+      <span id="result"></span>
+   </div>
+</div>
+   <script src="virtualjoystick.js"></script>
+   <script>
+   console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
+   var joystick    = new VirtualJoystick({
+      container       : document.body,
+      mouseSupport    : true,
+      limitStickTravel: true,
+      stickRadius     : 100
+   });
+   var down = 0;
+   joystick.addEventListener('touchStartValidation', function(event){
+      var touch = event.changedTouches[0];
+      if( touch.pageX < window.innerWidth/2 )   return false;
+      return true
+   });
+   
+   joystick.addEventListener('touchStart', function(){
+      console.log('down');
+      down = 1;
+   })
+   joystick.addEventListener('touchEnd', function(){
+      console.log('up');
+      down = 0
+   })
+   
+   setInterval(function(){
+      if (down) {
+         var outputEl    = document.getElementById('result');
+         outputEl.innerHTML      = joystick.deltaY();
+         socket.emit('key', { Key: 'Speed', value: joystick.deltaY().toFixed(1)});
+         socket.emit('key', { Key: 'Steering', value: joystick.deltaX().toFixed(1)});
+      }
+   }, 1/10 * 1000);
+   </script>
+</body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script src="app.js"></script>
+</html>

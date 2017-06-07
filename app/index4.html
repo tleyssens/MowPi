@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+ <meta charset="UTF-8">
+ <title>joystick Test</title>
+ <script type="text/javascript" src = "simpleGame.js"></script>
+ <script type="text/javascript">
+ 
+  var game;
+  var ball;
+  var joystick;
+ 
+  function init(){
+   game = new Scene();
+   ball = new Sprite(game, "redBall.png", 50, 50);
+   if (game.touchable){
+    joystick = new Joy();
+   } else {
+    alert("This game requires a touch screen");
+   } // end if
+   ball.setSpeed(0);
+   ball.setPosition(400, 300);
+   game.start();
+  } // end init
+ 
+  function update(){
+   game.clear();
+  
+   if (game.touchable){
+    ball.setDX(joystick.getDiffX());
+    ball.setDY(joystick.getDiffY());
+   } // end touchable
+  
+   ball.update();
+  
+  } // end update
+ 
+ </script>
+</head>
+<body onload = "init()">
+ <div id = "output"></div>
+</body>
+</html>

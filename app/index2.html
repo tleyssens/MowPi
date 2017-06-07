@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+ <meta charset="UTF-8">
+ <title>joystick Test</title>
+ <script type="text/javascript" src = "simpleGame.js"></script>
+ <script type="text/javascript">
+ 
+  var game;
+  var output;
+  var joystick;
+ 
+  function init(){
+   game = new Scene();
+   output = document.getElementById("output");
+   if (game.touchable){
+    joystick = new Joy();
+   } else {
+    alert("This test requires a touch-based interface");
+   }
+   game.start();
+  } // end init
+ 
+  function update(){
+   if (game.touchable){
+    jx = joystick.getMouseX();
+    jy = joystick.getMouseY();
+    jdx = joystick.getDiffX();
+    jdy = joystick.getDiffY();
+   
+    result = "joystick x: " + jx + "<br />";
+    result += "joystick y: " + jy + "<br />";
+    result += "joystick dx: " + jdx + "<br />";
+    result += "joystick dy: " + jdy + "<br />";
+   
+    output.innerHTML = result;
+   
+ 
+   } else {
+    alert("This example expects a touch screen");
+   }
+  } // end update
+ </script>
+</head>
+<body onload = "init()">
+ <div id = "output">Nothing here yet</div>
+</body>
+</html>
